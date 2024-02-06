@@ -57,8 +57,7 @@ class RotorEnvironment(Environment):
         )
 
         builder.joint_q[:] = [0.0]
-        builder.joint_qd[:] = [-1.0]
-        # builder.joint_target[:] = [0.0]
+        builder.joint_qd[:] = [-2.0]
 
 #%%     
 env = RotorEnvironment()
@@ -72,7 +71,8 @@ env.init()
 #%%
 plot_joint_coords = env.run()
 plt.plot(plot_joint_coords)
-
+plt.xlabel("time_step")
+plt.ylabel("angle in radian")
 #%%  
 # if __name__ == "__main__":
     # run_env(RotorEnvironment)
