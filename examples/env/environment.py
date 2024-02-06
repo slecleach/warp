@@ -425,68 +425,69 @@ class Environment:
                 ax[i, 6].yaxis.get_major_locator().set_params(integer=True)
             plt.show()
 
-        if self.plot_joint_coords:
-            import matplotlib.pyplot as plt
+        # if self.plot_joint_coords:
+        #     import matplotlib.pyplot as plt
 
-            joint_q_history = np.array(joint_q_history)
-            dof_q = joint_q_history.shape[1]
-            ncols = int(np.ceil(np.sqrt(dof_q)))
-            nrows = int(np.ceil(dof_q / float(ncols)))
-            fig, axes = plt.subplots(
-                ncols=ncols,
-                nrows=nrows,
-                constrained_layout=True,
-                figsize=(ncols * 3.5, nrows * 3.5),
-                squeeze=False,
-                sharex=True,
-            )
+        #     joint_q_history = np.array(joint_q_history)
+        #     dof_q = joint_q_history.shape[1]
+        #     ncols = int(np.ceil(np.sqrt(dof_q)))
+        #     nrows = int(np.ceil(dof_q / float(ncols)))
+        #     fig, axes = plt.subplots(
+        #         ncols=ncols,
+        #         nrows=nrows,
+        #         constrained_layout=True,
+        #         figsize=(ncols * 3.5, nrows * 3.5),
+        #         squeeze=False,
+        #         sharex=True,
+        #     )
 
-            joint_id = 0
-            joint_type_names = {
-                wp.sim.JOINT_BALL: "ball",
-                wp.sim.JOINT_REVOLUTE: "hinge",
-                wp.sim.JOINT_PRISMATIC: "slide",
-                wp.sim.JOINT_UNIVERSAL: "universal",
-                wp.sim.JOINT_COMPOUND: "compound",
-                wp.sim.JOINT_FREE: "free",
-                wp.sim.JOINT_FIXED: "fixed",
-                wp.sim.JOINT_DISTANCE: "distance",
-                wp.sim.JOINT_D6: "D6",
-            }
-            joint_lower = self.model.joint_limit_lower.numpy()
-            joint_upper = self.model.joint_limit_upper.numpy()
-            joint_type = self.model.joint_type.numpy()
-            while joint_id < len(joint_type) - 1 and joint_type[joint_id] == wp.sim.JOINT_FIXED:
-                # skip fixed joints
-                joint_id += 1
-            q_start = self.model.joint_q_start.numpy()
-            qd_start = self.model.joint_qd_start.numpy()
-            qd_i = qd_start[joint_id]
-            for dim in range(ncols * nrows):
-                ax = axes[dim // ncols, dim % ncols]
-                if dim >= dof_q:
-                    ax.axis("off")
-                    continue
-                ax.grid()
-                ax.plot(joint_q_history[:, dim])
-                if joint_type[joint_id] != wp.sim.JOINT_FREE:
-                    lower = joint_lower[qd_i]
-                    if abs(lower) < 2 * np.pi:
-                        ax.axhline(lower, color="red")
-                    upper = joint_upper[qd_i]
-                    if abs(upper) < 2 * np.pi:
-                        ax.axhline(upper, color="red")
-                joint_name = joint_type_names[joint_type[joint_id]]
-                ax.set_title(f"$\\mathbf{{q_{{{dim}}}}}$ ({self.model.joint_name[joint_id]} / {joint_name} {joint_id})")
-                if joint_id < self.model.joint_count - 1 and q_start[joint_id + 1] == dim + 1:
-                    joint_id += 1
-                    qd_i = qd_start[joint_id]
-                else:
-                    qd_i += 1
-            plt.tight_layout()
-            plt.show()
+        #     joint_id = 0
+        #     joint_type_names = {
+        #         wp.sim.JOINT_BALL: "ball",
+        #         wp.sim.JOINT_REVOLUTE: "hinge",
+        #         wp.sim.JOINT_PRISMATIC: "slide",
+        #         wp.sim.JOINT_UNIVERSAL: "universal",
+        #         wp.sim.JOINT_COMPOUND: "compound",
+        #         wp.sim.JOINT_FREE: "free",
+        #         wp.sim.JOINT_FIXED: "fixed",
+        #         wp.sim.JOINT_DISTANCE: "distance",
+        #         wp.sim.JOINT_D6: "D6",
+        #     }
+        #     joint_lower = self.model.joint_limit_lower.numpy()
+        #     joint_upper = self.model.joint_limit_upper.numpy()
+        #     joint_type = self.model.joint_type.numpy()
+        #     while joint_id < len(joint_type) - 1 and joint_type[joint_id] == wp.sim.JOINT_FIXED:
+        #         # skip fixed joints
+        #         joint_id += 1
+        #     q_start = self.model.joint_q_start.numpy()
+        #     qd_start = self.model.joint_qd_start.numpy()
+        #     qd_i = qd_start[joint_id]
+        #     for dim in range(ncols * nrows):
+        #         ax = axes[dim // ncols, dim % ncols]
+        #         if dim >= dof_q:
+        #             ax.axis("off")
+        #             continue
+        #         ax.grid()
+        #         ax.plot(joint_q_history[:, dim])
+        #         if joint_type[joint_id] != wp.sim.JOINT_FREE:
+        #             lower = joint_lower[qd_i]
+        #             if abs(lower) < 2 * np.pi:
+        #                 ax.axhline(lower, color="red")
+        #             upper = joint_upper[qd_i]
+        #             if abs(upper) < 2 * np.pi:
+        #                 ax.axhline(upper, color="red")
+        #         joint_name = joint_type_names[joint_type[joint_id]]
+        #         ax.set_title(f"$\\mathbf{{q_{{{dim}}}}}$ ({self.model.joint_name[joint_id]} / {joint_name} {joint_id})")
+        #         if joint_id < self.model.joint_count - 1 and q_start[joint_id + 1] == dim + 1:
+        #             joint_id += 1
+        #             qd_i = qd_start[joint_id]
+        #         else:
+        #             qd_i += 1
+        #     plt.tight_layout()
+        #     plt.show()
 
-        return 1000.0 * float(self.num_envs) / avg_time
+        # return 1000.0 * float(self.num_envs) / avg_time
+        return joint_q_history
 
 
 def run_env(Demo):
